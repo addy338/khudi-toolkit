@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Silent Builder Manual</title>
+  <style>
+    :root {
+      --ink: #14211d;
+      --muted: #65716d;
+      --paper: #f6f1e8;
+      --panel: #fffdf8;
+      --line: #d9ded5;
+      --deep: #101a17;
+      --olive: #526b45;
+      --clay: #a45d3c;
+      --gold: #bd8b35;
+      --blue: #315d70;
+      --red: #8a3d32;
+      --mist: #eef1ea;
+      --shadow: 0 18px 48px rgba(22, 32, 27, .10);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.58;
+    }
+
+    a { color: inherit; }
+    .app {
+      display: grid;
+      grid-template-columns: 304px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 18px;
+      overflow: auto;
+      background: var(--deep);
+      color: #f7efe3;
+      border-right: 1px solid rgba(255,255,255,.09);
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(16,26,23,.12), rgba(16,26,23,.78)),
+        url("https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=500&q=82");
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+
+    .brand h1 { margin: 0; font-size: 17px; line-height: 1.05; }
+    .brand p { margin: 4px 0 0; color: rgba(247,239,227,.68); font-size: 12px; }
+
+    nav { display: grid; gap: 7px; }
+    nav a {
+      text-decoration: none;
+      color: rgba(247,239,227,.78);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 10px 11px;
+      font-size: 13px;
+      font-weight: 750;
+    }
+    nav a:hover, nav a:focus {
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.12);
+      outline: 0;
+    }
+
+    .side-box {
+      margin-top: 22px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 8px;
+      color: rgba(247,239,227,.76);
+      font-size: 13px;
+    }
+
+    .side-box strong { color: #fff; }
+    .progress-wrap {
+      margin-top: 14px;
+      height: 10px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .progress-wrap span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), #d7c078);
+      transition: width .2s ease;
+    }
+
+    main { padding: 26px; }
+    section {
+      max-width: 1180px;
+      margin: 0 auto 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      min-height: 660px;
+    }
+    .hero-copy {
+      padding: 46px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .eyebrow {
+      color: var(--clay);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+    h2 {
+      margin: 10px 0 16px;
+      font-size: 4.6rem;
+      line-height: .93;
+      letter-spacing: 0;
+    }
+    .lead {
+      max-width: 66ch;
+      color: #3e4a46;
+      font-size: 18px;
+    }
+    .hero-visual {
+      position: relative;
+      min-height: 580px;
+      background:
+        linear-gradient(rgba(16,26,23,.05), rgba(16,26,23,.72)),
+        url("https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1400&q=82");
+      background-size: cover;
+      background-position: center;
+    }
+    .visual-note {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(255,253,248,.94);
+      border: 1px solid rgba(255,255,255,.65);
+    }
+    .visual-note h3 { margin: 0 0 8px; font-size: 21px; }
+    .visual-note p { margin: 0; color: #51615d; }
+
+    .content { padding: 32px; }
+    .section-head {
+      display: flex;
+      gap: 22px;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-head h3 {
+      margin: 0;
+      max-width: 11ch;
+      font-size: 2.75rem;
+      line-height: .96;
+      letter-spacing: 0;
+    }
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 62ch;
+    }
+
+    .grid { display: grid; gap: 14px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      min-height: 100%;
+      padding: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .card.dark {
+      background: var(--deep);
+      color: #f7efe3;
+      border-color: rgba(255,255,255,.08);
+    }
+    .card h4 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.22;
+    }
+    .card p { margin: 0; color: #5a6864; }
+    .card.dark p { color: rgba(247,239,227,.76); }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 9px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      background: #edf0e8;
+      color: #40513c;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .tag.gold { background: #f5ead5; color: #765321; }
+    .tag.blue { background: #e5eef1; color: #315d70; }
+    .tag.red { background: #f3e4e0; color: #7c332a; }
+
+    .callout {
+      padding: 18px;
+      background: #f4ecd9;
+      border-left: 4px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      color: #4c4638;
+      margin-top: 16px;
+    }
+    .callout strong { color: var(--ink); }
+
+    .equation {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+      border-radius: 8px;
+      background: var(--deep);
+      color: #f7efe3;
+      margin: 16px 0;
+    }
+    .equation code {
+      white-space: normal;
+      color: #efd18a;
+      font-size: 1.42rem;
+      line-height: 1.35;
+    }
+
+    .model {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .model-title {
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--mist);
+      border: 1px solid #d7ddd2;
+    }
+    .model-title strong {
+      display: block;
+      color: var(--olive);
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .ladder {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .rung {
+      padding: 15px;
+      min-height: 180px;
+      border-right: 1px solid var(--line);
+    }
+    .rung:last-child { border-right: 0; }
+    .rung h4 { margin: 0 0 8px; color: var(--clay); }
+    .rung p { margin: 0; color: #5c6864; font-size: 14px; }
+
+    .manual-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .manual-tabs button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #495653;
+      border-radius: 8px;
+      min-height: 40px;
+      padding: 8px 11px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .manual-tabs button.active {
+      background: var(--deep);
+      color: #fff;
+      border-color: var(--deep);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .review-card {
+      display: grid;
+      gap: 14px;
+      padding: 24px;
+      min-height: 250px;
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(16,26,23,.68), rgba(16,26,23,.84)),
+        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=82");
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+    }
+    .review-card h4 { margin: 0; font-size: 30px; line-height: 1.05; }
+    .review-card p { margin: 0; color: rgba(255,255,255,.82); max-width: 72ch; }
+
+    .checklist label {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 11px 0;
+      border-top: 1px solid #ece7de;
+      color: #4c5a56;
+      font-weight: 700;
+    }
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
+      accent-color: var(--olive);
+    }
+
+    details {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 900;
+    }
+    details p { color: #586763; }
+    .proof a { color: var(--blue); }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 0;
+      background: var(--deep);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .button.secondary { background: #e8e2d8; color: var(--ink); }
+
+    .small { font-size: 13px; color: var(--muted); }
+    .plain-list { margin: 0; padding-left: 18px; color: #56635f; }
+    .plain-list li { margin: 7px 0; }
+
+    @media (max-width: 1040px) {
+      .app { grid-template-columns: 1fr; }
+      aside {
+        position: relative;
+        height: auto;
+      }
+      nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      main { padding: 16px; }
+      .hero, .grid.two, .grid.three, .grid.four, .model, .ladder { grid-template-columns: 1fr; }
+      .hero-copy, .content { padding: 23px; }
+      h2 { font-size: 2.85rem; }
+      .section-head { display: block; }
+      .section-head h3 { font-size: 2.1rem; max-width: none; margin-bottom: 10px; }
+      .hero-visual { min-height: 370px; }
+      .rung { border-right: 0; border-bottom: 1px solid var(--line); }
+      .rung:last-child { border-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <h1>The Silent Builder Manual</h1>
+          <p>Deep growth, Islamic frame, real-world execution</p>
+        </div>
+      </div>
+      <nav aria-label="Manual sections">
+        <a href="#thesis">Thesis</a>
+        <a href="#evidence">How We Arrived</a>
+        <a href="#secret">The Secret</a>
+        <a href="#why">Why Most People Miss It</a>
+        <a href="#operating-system">Islamic Operating System</a>
+        <a href="#models">Mental Models</a>
+        <a href="#silent">Silent Builder Rule</a>
+        <a href="#stack">Skill Stack</a>
+        <a href="#review">Review Cards</a>
+        <a href="#implementation">Implementation</a>
+        <a href="#proof">Proof</a>
+      </nav>
+      <div class="side-box">
+        <strong>Read this slowly.</strong>
+        This is not for public performance. It is for private rebuilding.
+        <div class="progress-wrap" aria-label="Checklist progress"><span id="sideProgress"></span></div>
+        <p id="progressText" class="small">0 checks completed.</p>
+      </div>
+    </aside>
+
+    <main>
+      <section class="hero" id="thesis">
+        <div class="hero-copy">
+          <div class="eyebrow">The real thesis</div>
+          <h2>Do not become impressive. Become prepared.</h2>
+          <p class="lead">The whole analysis leads here: the highest human path is to become a servant of Allah who is inwardly clean, intellectually awake, emotionally governed, technically useful, financially responsible, socially trustworthy, and quiet enough to build without needing applause.</p>
+          <div class="callout">
+            <strong>Plain English translation of the mission:</strong> worship Allah with your whole life, prepare every lawful strength you can, protect your heart from corruption, and build benefit that survives your mood, your reputation, and eventually your death.
+          </div>
+          <div class="button-row">
+            <a class="button" href="#evidence">See the evidence path</a>
+            <a class="button secondary" href="#implementation">Start implementation</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="visual-note">
+            <h3>The darvesh-builder principle</h3>
+            <p>Become inwardly detached before becoming outwardly capable. If power arrives before purification, it usually exposes the disease rather than serving the truth.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="evidence">
+        <div class="content">
+          <div class="section-head">
+            <h3>How The Conclusion Was Reached</h3>
+            <p>The answer was not pulled from one motivational framework. It came from stacking multiple lenses until the same pattern kept appearing.</p>
+          </div>
+          <div class="ladder">
+            <div class="rung"><h4>Qur'an</h4><p>Life is worship, accountability is real, strength must be prepared, justice must override ego, and wisdom is a tremendous gift.</p></div>
+            <div class="rung"><h4>Sunnah</h4><p>The Prophet's model joins prayer, trade, leadership, family duty, mercy, strategy, consultation, courage, and restraint.</p></div>
+            <div class="rung"><h4>Civilization</h4><p>Muslims rose when they took knowledge, trade, trust, governance, science, and worship together. Decline followed fragmentation.</p></div>
+            <div class="rung"><h4>Biology</h4><p>The body seeks comfort, dopamine, status, and safety. Growth requires governing impulse instead of obeying it.</p></div>
+            <div class="rung"><h4>Economics</h4><p>Markets reward scarce output, trust, allocation, leverage, and long time horizons, not merely effort or intention.</p></div>
+            <div class="rung"><h4>AI Age</h4><p>Ordinary technical output is commoditized. Judgment, trust, originality, taste, leadership, and disciplined learning become more important.</p></div>
+          </div>
+          <div class="equation">
+            <code>Real growth = correct aim x purified self x clear judgment x prepared strength x trustworthy execution x long horizon</code>
+            <p>Modern systems can tell you how to grow. Islam tells you what growth is for, what can corrupt it, and how it will be weighed.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="secret">
+        <div class="content">
+          <div class="section-head">
+            <h3>The Secret Under The Surface</h3>
+            <p>It is not really hidden. It is simply too uncomfortable, slow, and unfashionable for most people to live.</p>
+          </div>
+          <div class="grid three">
+            <div class="card"><span class="tag gold">Time horizon</span><h4>Winners think in years; distracted people think in urges.</h4><p>A person who can sacrifice today's cheap pleasure for a clean five-year direction becomes rare. A person who also thinks about the afterlife becomes rarer still.</p></div>
+            <div class="card"><span class="tag blue">Inner governance</span><h4>The body screams before the future pays.</h4><p>Your brain prefers comfort now. Prayer, fasting, study, exercise, and restraint train the part of you that can choose meaning over mood.</p></div>
+            <div class="card"><span class="tag red">Social gravity</span><h4>Your environment will defend its own normal.</h4><p>People who live for the present often pull long-term builders back toward entertainment, gossip, romance, comfort, and cynicism.</p></div>
+          </div>
+          <div class="callout">
+            <strong>The practical secret:</strong> silent, consistent, long-horizon obedience beats loud, emotional, short-term motivation. The world sees the result late. Allah sees the process immediately.
+          </div>
+        </div>
+      </section>
+
+      <section id="why">
+        <div class="content">
+          <div class="section-head">
+            <h3>Why Most People Do Not Do This</h3>
+            <p>The barrier is not lack of information. It is friction: biological, social, emotional, spiritual, and economic.</p>
+          </div>
+          <div class="grid two">
+            <div class="card"><span class="tag red">Dopamine</span><h4>Immediate pleasure feels more real than future reward.</h4><p>Scrolling, entertainment, lust, food, attention, and arguments give fast feedback. Study, prayer discipline, character, money, and deep skill pay slowly.</p></div>
+            <div class="card"><span class="tag red">Ego</span><h4>The self wants growth without humiliation.</h4><p>Real growth requires admitting ignorance, taking correction, being bad at something, and doing unglamorous repetitions.</p></div>
+            <div class="card"><span class="tag red">Crowd pressure</span><h4>People mock what exposes them.</h4><p>If your discipline reminds others of their wasted time, they may call you extreme, boring, fake, or unrealistic.</p></div>
+            <div class="card"><span class="tag red">False spirituality</span><h4>Some people confuse trust in Allah with passivity.</h4><p>True reliance means tying the camel: planning, training, working, consulting, correcting, and then leaving the outcome to Allah.</p></div>
+            <div class="card"><span class="tag red">Information addiction</span><h4>Knowing feels like doing.</h4><p>Watching lectures, reading threads, and collecting frameworks can become a refined form of avoidance unless they produce action.</p></div>
+            <div class="card"><span class="tag red">No visible applause</span><h4>The early phase looks unimpressive.</h4><p>Silent rebuilding often feels lonely because the first reward is not status. The first reward is self-respect before Allah.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="operating-system">
+        <div class="content">
+          <div class="section-head">
+            <h3>The Islamic Operating System</h3>
+            <p>Arabic terms are included only where useful, with plain English meanings. You do not need to sound scholarly; you need to live the meanings.</p>
+          </div>
+          <div class="grid three">
+            <div class="card"><span class="tag">Ibadah</span><h4>Worship as whole-life orientation</h4><p>Not only prayer and fasting. Your study, work, money, speech, body, family duty, and service can become worship when they are lawful and sincere.</p></div>
+            <div class="card"><span class="tag">Khilafah</span><h4>Stewardship, not fantasy</h4><p>You are responsible for what Allah placed under your care: self, family, resources, knowledge, influence, and community. This is not reckless politics. It is accountable stewardship.</p></div>
+            <div class="card"><span class="tag">Tazkiyah</span><h4>Cleaning the inner self</h4><p>Purifying arrogance, showing off, envy, anger, lust, laziness, greed, and fear of people. This is the protection layer for every other skill.</p></div>
+            <div class="card"><span class="tag">Hikmah</span><h4>Wisdom</h4><p>Knowing what matters, when it matters, and how to act. Knowledge without wisdom can be harsh, naive, or useless.</p></div>
+            <div class="card"><span class="tag">Quwwah</span><h4>Prepared strength</h4><p>Physical, financial, technical, intellectual, emotional, and social capacity. Weakness is not automatically piety. Strength is not automatically arrogance.</p></div>
+            <div class="card"><span class="tag">Amanah</span><h4>Trustworthiness</h4><p>Being safe with people's time, money, secrets, rights, and expectations. Before revelation, the Prophet was known as trustworthy.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="models">
+        <div class="content">
+          <div class="section-head">
+            <h3>Simple Mental Models</h3>
+            <p>These are the math, economics, algorithm, and psychology ideas behind the framework, explained without making them decorative.</p>
+          </div>
+          <div class="grid">
+            <div class="model">
+              <div class="model-title"><strong>01</strong>Compounding</div>
+              <div class="card"><h4>Small repeated actions become disproportionate later.</h4><p>One focused hour daily looks small this week. Over a year it becomes hundreds of hours. Prayer discipline, writing, coding, exercise, savings, and character all compound.</p></div>
+            </div>
+            <div class="model">
+              <div class="model-title"><strong>02</strong>Feedback loops</div>
+              <div class="card"><h4>Your habits create your future appetite.</h4><p>Scrolling makes focus harder, which makes study painful, which causes more scrolling. Prayer and deep work create the opposite loop: self-respect, clarity, and more energy for obedience.</p></div>
+            </div>
+            <div class="model">
+              <div class="model-title"><strong>03</strong>Delayed reward</div>
+              <div class="card"><h4>The market and the soul both test patience.</h4><p>Many people quit before the curve bends upward. Long-term builders endure the flat part because they are not only chasing immediate emotional reward.</p></div>
+            </div>
+            <div class="model">
+              <div class="model-title"><strong>04</strong>Transaction cost</div>
+              <div class="card"><h4>Trust reduces friction.</h4><p>If people must constantly verify, monitor, and protect themselves from you, cooperation slows. A trustworthy person becomes easier to hire, fund, follow, marry, recommend, and build with.</p></div>
+            </div>
+            <div class="model">
+              <div class="model-title"><strong>05</strong>Bayesian updating</div>
+              <div class="card"><h4>Update your beliefs when reality gives evidence.</h4><p>If a habit repeatedly harms you, stop calling it a phase. If a person repeatedly pulls you down, stop calling it loyalty. The believer is not meant to be harmed by the same pattern again and again.</p></div>
+            </div>
+            <div class="model">
+              <div class="model-title"><strong>06</strong>Local maximum</div>
+              <div class="card"><h4>Comfort can trap you below your real potential.</h4><p>A local maximum is a small hill that feels like the top because climbing down first is painful. Sometimes growth requires temporary discomfort to reach a higher peak.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="silent">
+        <div class="content">
+          <div class="section-head">
+            <h3>The Silent Builder Rule</h3>
+            <p>Do not shout the blueprint everywhere. Not because you are superior, but because not everyone is ready to protect a long-term view.</p>
+          </div>
+          <div class="grid two">
+            <div class="card dark"><span class="tag gold">Private conviction</span><h4>Build quietly until your life becomes the argument.</h4><p>Most transformation dies because it was announced too early. People question it, mock it, debate it, or pull it into social performance. Protect the seed.</p></div>
+            <div class="card"><span class="tag red">Present-pull</span><h4>Short-term people will call long-term discipline a waste.</h4><p>They may say enjoy now, relax, be normal, do it later, do not be too serious. Sometimes they love you. Sometimes they are insecure. Either way, their time horizon is not your command.</p></div>
+            <div class="card"><span class="tag blue">Strategic humility</span><h4>Do not act mysterious or superior.</h4><p>Be warm, useful, and ordinary in public. Keep your deepest intentions between you and Allah, your notebooks, and a tiny circle of serious people.</p></div>
+            <div class="card"><span class="tag">Operational rule</span><h4>Share results, not every intention.</h4><p>Tell people what they need to know. Do not explain your whole spiritual, financial, intellectual, or career strategy to people who are not responsible for helping you guard it.</p></div>
+          </div>
+          <div class="callout">
+            <strong>Silent builder sentence:</strong> I do not need to be understood at the seed stage. I need to be sincere, consistent, and protected from unnecessary noise.
+          </div>
+        </div>
+      </section>
+
+      <section id="stack">
+        <div class="content">
+          <div class="section-head">
+            <h3>The Real Skill Stack</h3>
+            <p>These are not separate hobbies. They are one integrated preparation system.</p>
+          </div>
+          <div class="manual-tabs" role="tablist" aria-label="Skill stack tabs">
+            <button class="tab-button active" data-tab="inner">Inner</button>
+            <button class="tab-button" data-tab="mind">Mind</button>
+            <button class="tab-button" data-tab="body">Body</button>
+            <button class="tab-button" data-tab="money">Money</button>
+            <button class="tab-button" data-tab="systems">Systems</button>
+          </div>
+          <div class="tab-panel active" id="tab-inner">
+            <div class="grid three">
+              <div class="card"><h4>Prayer as anchor</h4><p>Prayer interrupts the attention economy and re-centers you around Allah before the world defines you.</p></div>
+              <div class="card"><h4>Daily self-audit</h4><p>Ask where ego, lust, anger, envy, laziness, or fear drove you. Repair one thing daily.</p></div>
+              <div class="card"><h4>Hidden worship</h4><p>Do good that no one can reward. This trains sincerity and breaks addiction to being seen.</p></div>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-mind">
+            <div class="grid three">
+              <div class="card"><h4>Clear thinking</h4><p>State the real problem, list assumptions, test them, and rebuild from evidence.</p></div>
+              <div class="card"><h4>Writing</h4><p>Write to think. If your thoughts cannot survive the page, they are not clear yet.</p></div>
+              <div class="card"><h4>Learning speed</h4><p>Use active recall, spaced repetition, projects, teaching, and feedback. Do not only consume.</p></div>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-body">
+            <div class="grid three">
+              <div class="card"><h4>Sleep</h4><p>No serious spiritual or strategic life survives chronic sleep abuse for long.</p></div>
+              <div class="card"><h4>Training</h4><p>Strength and stamina make discipline physical. The body is a trust, not a decoration.</p></div>
+              <div class="card"><h4>Dopamine control</h4><p>Reduce cheap stimulation: scrolling, lust, junk entertainment, and useless debate.</p></div>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-money">
+            <div class="grid three">
+              <div class="card"><h4>Halal earning</h4><p>Income is not only personal comfort. It is family protection, independence, giving, and community capacity.</p></div>
+              <div class="card"><h4>Capital allocation</h4><p>Learn income vs wealth, saving, investing, business basics, taxes, risk, and avoiding exploitative debt.</p></div>
+              <div class="card"><h4>Generosity</h4><p>Money purifies when it serves. Wealth without giving tightens the heart.</p></div>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-systems">
+            <div class="grid three">
+              <div class="card"><h4>AI literacy</h4><p>Use tools to accelerate thinking and output, but do not outsource judgment, taste, conscience, or responsibility.</p></div>
+              <div class="card"><h4>Leverage</h4><p>Build assets that repeat value: code, writing, teaching, products, institutions, communities, and processes.</p></div>
+              <div class="card"><h4>Service architecture</h4><p>The highest systems solve real human problems cleanly and can keep benefiting people after you are gone.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="review">
+        <div class="content">
+          <div class="section-head">
+            <h3>Review Cards</h3>
+            <p>These are meant to be glanced at repeatedly. Repetition is not fluff; it is how a worldview moves from idea to instinct.</p>
+          </div>
+          <div class="review-card">
+            <span class="tag gold">Card <span id="cardNumber">1</span> of 8</span>
+            <h4 id="reviewTitle">Do not perform your transformation.</h4>
+            <p id="reviewText">Protect it. Build quietly. Let the early stage be between you and Allah. A seed dug up every day to show people will not grow.</p>
+          </div>
+          <div class="button-row">
+            <button class="button" id="nextCard">Next card</button>
+            <button class="button secondary" id="randomCard">Random card</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="implementation">
+        <div class="content">
+          <div class="section-head">
+            <h3>Implementation</h3>
+            <p>The system must be small enough to repeat and serious enough to change your life.</p>
+          </div>
+          <div class="grid two">
+            <div class="card checklist">
+              <span class="tag">Daily minimum</span>
+              <h4>Do these even on bad days</h4>
+              <label><input class="check" type="checkbox">Prayer protected as the day's anchor.</label>
+              <label><input class="check" type="checkbox">Qur'an with meaning, even five minutes.</label>
+              <label><input class="check" type="checkbox">One deep work block for the chosen skill or responsibility.</label>
+              <label><input class="check" type="checkbox">Body moved: walk, train, or stretch.</label>
+              <label><input class="check" type="checkbox">One act of service or responsibility without needing praise.</label>
+              <label><input class="check" type="checkbox">Night audit: repent, repair, reset.</label>
+            </div>
+            <div class="card checklist">
+              <span class="tag blue">Weekly audit</span>
+              <h4>Do not negotiate with the mirror</h4>
+              <label><input class="check" type="checkbox">What made me closer to Allah?</label>
+              <label><input class="check" type="checkbox">What made me weaker?</label>
+              <label><input class="check" type="checkbox">What repeated mistake needs a boundary?</label>
+              <label><input class="check" type="checkbox">What valuable skill did I visibly improve?</label>
+              <label><input class="check" type="checkbox">Who did I benefit?</label>
+              <label><input class="check" type="checkbox">What strength is Allah asking me to prepare next?</label>
+            </div>
+          </div>
+          <div class="callout">
+            <strong>90-day rule:</strong> choose one worldly arena for serious development. Do not keep switching. Your potential needs a battlefield: CS, business, writing, finance, design, education, health, community building, or another real domain.
+          </div>
+        </div>
+      </section>
+
+      <section id="proof" class="proof">
+        <div class="content">
+          <div class="section-head">
+            <h3>Proof And Research Layer</h3>
+            <p>This section is for verification. The main manual is for transformation.</p>
+          </div>
+          <details open>
+            <summary>Qur'an anchors</summary>
+            <p>Purpose: <a href="https://quran.com/51/56" target="_blank" rel="noopener">Qur'an 51:56</a>. Prepared strength: <a href="https://quran.com/8/60" target="_blank" rel="noopener">Qur'an 8:60</a>. Wisdom: <a href="https://quran.com/2/269" target="_blank" rel="noopener">Qur'an 2:269</a>. Justice even against yourself: <a href="https://quran.com/4/135" target="_blank" rel="noopener">Qur'an 4:135</a>. Consultation: <a href="https://quran.com/42/38" target="_blank" rel="noopener">Qur'an 42:38</a>.</p>
+          </details>
+          <details>
+            <summary>Sunnah anchors</summary>
+            <p>Actions are judged by intentions: <a href="https://sunnah.com/bukhari:1" target="_blank" rel="noopener">Bukhari 1</a>. The strong believer: <a href="https://sunnah.com/muslim:2664" target="_blank" rel="noopener">Muslim 2664</a>. Anger control as real strength: <a href="https://sunnah.com/bukhari:6114" target="_blank" rel="noopener">Bukhari 6114</a>. Responsibility for what is under your care: <a href="https://sunnah.com/bukhari:893" target="_blank" rel="noopener">Bukhari 893</a>.</p>
+          </details>
+          <details>
+            <summary>Future-of-work evidence</summary>
+            <p>The World Economic Forum's 2025 skills outlook emphasizes analytical thinking, resilience, flexibility, leadership, AI, big data, technological literacy, and lifelong learning. McKinsey's skill-shift research points in the same direction: higher cognitive, technological, and social-emotional skills become more important as automation rises.</p>
+            <p><a href="https://www.weforum.org/publications/the-future-of-jobs-report-2025/in-full/3-skills-outlook/" target="_blank" rel="noopener">WEF Skills Outlook</a> and <a href="https://www.mckinsey.com/featured-insights/future-of-work/skill-shift-automation-and-the-future-of-the-workforce" target="_blank" rel="noopener">McKinsey Skill Shift</a>.</p>
+          </details>
+          <details>
+            <summary>Learning and behavior evidence</summary>
+            <p>Modern learning science supports active recall, spaced repetition, feedback, and deliberate practice. Behavioral science supports the core idea that environment, incentives, habits, and delayed gratification shape outcomes more than raw intention.</p>
+          </details>
+          <details>
+            <summary>Important safety correction</summary>
+            <p>Prepared strength must be lawful, ethical, and responsible. This manual applies Qur'an 8:60 as a personal principle of preparedness against weakness, dependency, ignorance, and distraction. It is not a call to reckless confrontation, political fantasy, or harm.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll('.tab-button'));
+    const panels = Array.from(document.querySelectorAll('.tab-panel'));
+    tabs.forEach((button) => {
+      button.addEventListener('click', () => {
+        tabs.forEach((b) => b.classList.remove('active'));
+        panels.forEach((p) => p.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById('tab-' + button.dataset.tab).classList.add('active');
+      });
+    });
+
+    const reviewCards = [
+      ['Do not perform your transformation.', 'Protect it. Build quietly. Let the early stage be between you and Allah. A seed dug up every day to show people will not grow.'],
+      ['The body wants now. The soul needs forever.', 'Cheap pleasure speaks loudly because it pays immediately. Faith trains you to hear the longer truth.'],
+      ['Trust in Allah is not laziness.', 'Tie the camel: plan, study, train, consult, execute, correct. Then surrender the result to Allah.'],
+      ['A weak sincere person is limited. A strong corrupt person is dangerous.', 'The target is strength with trustworthiness: capable enough to help, purified enough not to harm.'],
+      ['If a pattern keeps harming you, update.', 'Repeated damage is data. Stop calling every repeated mistake destiny. Build a boundary and learn.'],
+      ['Your environment has gravity.', 'Do not hate people for being short-term, but do not let their time horizon become your command.'],
+      ['Knowledge must become action.', 'If a lecture does not change a habit, a decision, a schedule, a boundary, or a service, it may only be refined entertainment.'],
+      ['Build what outlives the mood.', 'Code, writing, teaching, institutions, wealth used well, family stability, and hidden service can keep producing benefit after attention fades.']
+    ];
+    let cardIndex = 0;
+    const title = document.getElementById('reviewTitle');
+    const text = document.getElementById('reviewText');
+    const num = document.getElementById('cardNumber');
+    function showCard(index) {
+      cardIndex = (index + reviewCards.length) % reviewCards.length;
+      title.textContent = reviewCards[cardIndex][0];
+      text.textContent = reviewCards[cardIndex][1];
+      num.textContent = String(cardIndex + 1);
+    }
+    document.getElementById('nextCard').addEventListener('click', () => showCard(cardIndex + 1));
+    document.getElementById('randomCard').addEventListener('click', () => showCard(Math.floor(Math.random() * reviewCards.length)));
+
+    const checks = Array.from(document.querySelectorAll('.check'));
+    const sideProgress = document.getElementById('sideProgress');
+    const progressText = document.getElementById('progressText');
+    const key = 'silent-builder-checks-v2';
+    const saved = JSON.parse(localStorage.getItem(key) || '[]');
+    checks.forEach((box, index) => {
+      box.checked = Boolean(saved[index]);
+      box.addEventListener('change', updateProgress);
+    });
+    function updateProgress() {
+      const state = checks.map((box) => box.checked);
+      localStorage.setItem(key, JSON.stringify(state));
+      const done = state.filter(Boolean).length;
+      const pct = checks.length ? Math.round((done / checks.length) * 100) : 0;
+      sideProgress.style.width = pct + '%';
+      progressText.textContent = done + ' checks completed.';
+    }
+    updateProgress();
+  </script>
+</body>
+</html>

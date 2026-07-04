@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Local machine setup and shell backups are not portfolio material.
+setup-agent-homebrew.sh
+setup-backups/
+
+# Repeated render QA outputs; final report artifacts stay tracked.
+ml_assignment_submission/render_check*/

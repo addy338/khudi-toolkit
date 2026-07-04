@@ -1,0 +1,8 @@
+Generated ML assignment metrics
+Q11 classification accuracy: 95.56%
+Q11 k-means aligned accuracy: 97.78%
+Q12 ANN accuracy: 91.00%
+Q12 sentiment accuracy: 100.00%
+Q13 CNN accuracy: 89.15%
+DOCX: /Users/adnanpervez/Documents/khudi/ml_assignment_submission/ml_data_science_assignment_submission.docx
+PDF: /Users/adnanpervez/Documents/khudi/ml_assignment_submission/ml_data_science_assignment_submission.pdf
