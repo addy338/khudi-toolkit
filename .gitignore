@@ -6,5 +6,7 @@ __pycache__/
 setup-agent-homebrew.sh
 setup-backups/
 
-# Repeated render QA outputs; final report artifacts stay tracked.
-ml_assignment_submission/render_check*/
+# Generated Outputs (Noise)
+*.pdf
+*.html
+ml_assignment_submission/
